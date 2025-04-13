@@ -5,6 +5,7 @@ import GroceryList from './components/GroceryList';
 import ChangePassword from './components/ChangePassword';
 import CartAnimation from './components/CartAnimation';
 import CartIcon from './components/CartIcon';
+import VersionInfo from './components/VersionInfo';
 import { useAuth } from './contexts/AuthContext';
 import './App.css'
 
@@ -19,6 +20,9 @@ function AppContent({ isPWA }) {
       <>
         <CartAnimation />
         <Login />
+        <div className="app-footer">
+          <VersionInfo className="login-version" />
+        </div>
       </>
     );
   }
@@ -30,7 +34,7 @@ function AppContent({ isPWA }) {
       <div className="app-container">
         <header>
           <h1>
-            <CartIcon size="1.5em" /> GrocerySync
+            <CartIcon size="1.5em" /> <span className="app-title"><strong>Grocery</strong>Sync</span>
           </h1>
           <div className="user-info">
             <span>Welcome, {currentUser.username} ({currentUser.role})</span>
@@ -44,6 +48,10 @@ function AppContent({ isPWA }) {
         ) : (
           <GroceryList />
         )}
+        
+        <footer className="app-footer">
+          <VersionInfo showControls={true} />
+        </footer>
       </div>
     </>
   );
@@ -75,10 +83,29 @@ function App() {
         navigator.serviceWorker.register('/service-worker.js')
           .then(registration => {
             console.log('ServiceWorker registration successful with scope: ', registration.scope);
+            
+            // Check for service worker updates
+            registration.addEventListener('updatefound', () => {
+              console.log('New service worker being installed');
+              const newWorker = registration.installing;
+              
+              newWorker.addEventListener('statechange', () => {
+                if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                  console.log('New content is available; please refresh.');
+                  // You could show a notification here that an update is available
+                }
+              });
+            });
           })
           .catch(error => {
             console.log('ServiceWorker registration failed: ', error);
           });
+      });
+      
+      // Handle service worker updates
+      navigator.serviceWorker.addEventListener('controllerchange', () => {
+        console.log('Controller changed, refreshing page to use new service worker');
+        window.location.reload();
       });
     }
 

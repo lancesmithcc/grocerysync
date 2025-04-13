@@ -21,8 +21,8 @@ function Login() {
   
   return (
     <div className="login-container">
-      <div className="login-form-container">
-        <h2><CartIcon size="1.5em" /> GrocerySync</h2>
+      <div className="login-card">
+        <h2><CartIcon size="1.5em" /> <span className="app-title"><strong>Grocery</strong>Sync</span></h2>
         <h3>Login</h3>
         
         <MessageDisplay 

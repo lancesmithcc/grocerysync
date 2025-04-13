@@ -50,16 +50,16 @@
   --text-color: #f0f0f0;
   --error-color: #ff6b6b;
   --success-color: #4bb543;
-  --button-color: #4a5aef;
-  --button-hover: #3a49df;
-  --delete-button: #ff4757;
-  --delete-hover: #e03746;
+  --button-color: #2d0b61;
+  --button-hover: #530a58;
+  --delete-button: #57040b;
+  --delete-hover: #7c3339;
   --border-radius: 8px;
   --box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   --aurora-glow: linear-gradient(
     45deg,
-    rgba(37, 46, 128, 0.8) 0%,
-    rgba(83, 27, 97, 0.8) 25%, 
+    rgba(10, 13, 40, 0.8) 0%,
+    rgba(33, 11, 38, 0.8) 25%, 
     rgba(20, 26, 78, 0.8) 50%,
     rgba(58, 19, 68, 0.8) 75%,
     rgba(22, 28, 80, 0.8) 100%
@@ -195,6 +195,15 @@ h1 {
   font-size: 2.5rem;
   font-weight: 800;
   color: var(--text-color);
+}
+
+/* App title styling */
+.app-title strong {
+  font-weight: 700;
+}
+
+.app-title {
+  font-weight: 400;
 }
 
 .user-info {
@@ -760,4 +769,61 @@ h1 svg {
   max-height: none;
   display: flex;
   flex-direction: column;
+}
+
+/* Version info and footer styles */
+.app-footer {
+  margin-top: 20px;
+  padding: 10px;
+  text-align: center;
+  opacity: 0.7;
+  transition: opacity 0.3s;
+  font-size: 0.8rem;
+}
+
+.app-footer:hover {
+  opacity: 1;
+}
+
+.version-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.version-text {
+  font-size: 0.75rem;
+  color: #888;
+}
+
+.version-controls {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.clear-cache-btn {
+  font-size: 0.7rem !important;
+  padding: 4px 8px !important;
+  opacity: 0.8;
+}
+
+.clear-cache-btn:hover {
+  opacity: 1;
+}
+
+.version-message {
+  font-size: 0.7rem;
+  color: #f59e0b;
+  margin-top: 4px;
+}
+
+.login-version {
+  position: absolute;
+  bottom: 10px;
+  width: 100%;
+  left: 0;
+  text-align: center;
 }
