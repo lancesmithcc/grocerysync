@@ -99,27 +99,27 @@ export async function changePassword(username, currentPassword, newPassword) {
       
       console.log('User found, updating password...');
       
-      // Use a simple update statement
-      await client.query(fql`
-        Users.byId(${user.data.id}).update({
-          passwordHash: ${newPasswordHash}
-        })
-      `);
+      // Fix: Use parameter object instead of string interpolation for the password hash
+      await client.query(
+        fql`Users.byId(${user.data.id}).update({ passwordHash: ${newPasswordHash} })`
+      );
       
       return { success: true };
     } catch (dbError) {
-      console.error('Database error:', dbError);
-      // Try one more approach as a fallback
+      console.error('Password change error: QueryCheckError:', dbError);
+      
+      // Try an alternative approach using a different query structure
       try {
         console.log('Trying alternative update approach...');
-        // Direct query without variable references
-        const updateQuery = `
-          Users.where(.username == "${username}").first().update({
-            passwordHash: "${newPasswordHash}"
-          })
-        `;
         
-        await client.query({ query: updateQuery });
+        // Use a more direct approach with explicit document reference
+        await client.query(
+          fql`
+            let user = Users.where(.username == ${username}).first()
+            user.update({ passwordHash: ${newPasswordHash} })
+          `
+        );
+        
         return { success: true };
       } catch (fallbackError) {
         console.error('Fallback approach failed:', fallbackError);

@@ -32,20 +32,17 @@
         - [x] Set up state management (e.g., Context API)
         - [x] Set up routing (if needed)
 - [x] **Component Refactoring**
-    - [x] **GroceryList Component Refactoring**
-        - [x] Extract AddItemForm into its own component
-        - [x] Extract ItemList into its own component
-        - [x] Extract ItemCard into its own component
-        - [x] Create common MessageDisplay component for errors and success messages
-    - [x] **CartAnimation Component Refactoring**
-        - [x] Extract Cart item renderer into its own component
-        - [x] Extract animation logic into a custom hook (useCartAnimation)
-        - [x] Extract mouse interaction logic into a custom hook
-    - [x] **Common UI Components**
-        - [x] Create Button component with variants (primary, secondary, danger)
-        - [x] Create Input component with validation
-        - [x] Create Form component with common styling
-        - [x] Create StarRating component for importance ratings
+    - [x] Extract AddItemForm into its own component
+    - [x] Extract ItemList into its own component
+    - [x] Extract ItemCard into its own component
+    - [x] Create common MessageDisplay component for errors and success messages
+    - [x] Extract Cart item renderer into its own component
+    - [x] Extract animation logic into a custom hook (useCartAnimation)
+    - [x] Extract mouse interaction logic into a custom hook
+    - [x] Create Button component with variants (primary, secondary, danger)
+    - [x] Create Input component with validation
+    - [x] Create Form component with common styling
+    - [x] Create StarRating component for importance ratings
 - [ ] **Additional Enhancements**
     - [x] **UI/UX Improvements**
         - [x] Add loading states and animations
@@ -55,6 +52,9 @@
     - [ ] **Performance Optimization**
         - [ ] Implement memoization for expensive operations
         - [ ] Optimize rendering with proper React patterns
+- [ ] **Bug Fixes**
+    - [x] Fix password change functionality (FQL query validation error)
+    - [ ] Address any other reported bugs
 - [ ] **Deployment (Optional)**
     - [ ] Configure hosting
     - [ ] Deploy application 
