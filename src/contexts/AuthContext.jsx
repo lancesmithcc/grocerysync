@@ -65,11 +65,15 @@ export function AuthProvider({ children }) {
     setError('');
     
     try {
+      console.log('AuthContext: Updating password for user:', currentUser.username);
+      
       const result = await changePassword(
         currentUser.username,
         currentPassword,
         newPassword
       );
+      
+      console.log('AuthContext: Password update result:', result);
       
       if (!result.success) {
         setError(result.error);
@@ -77,8 +81,13 @@ export function AuthProvider({ children }) {
       
       return result;
     } catch (err) {
-      setError('An error occurred while changing password');
-      return { success: false, error: 'An error occurred' };
+      console.error('AuthContext: Exception during password update:', err);
+      const errorMessage = err.message || 'Unknown error';
+      setError(`An error occurred while changing password: ${errorMessage}`);
+      return { 
+        success: false, 
+        error: `An error occurred while changing password: ${errorMessage}` 
+      };
     } finally {
       setLoading(false);
     }
