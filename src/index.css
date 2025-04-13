@@ -1,0 +1,57 @@
+/* Reset some default styles that might conflict with App.css */
+:root {
+  font-family: 'Jost', sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: dark; /* Force dark mode */
+  color: rgba(255, 255, 255, 0.87);
+  background-color: #1a1a1a; /* Charcoal background */
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Reset the body to work better with our fixed animations */
+body {
+  margin: 0;
+  padding: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Remove the centered flex layout that conflicts with our design */
+body {
+  display: block;
+  min-width: unset;
+  min-height: unset;
+}
+
+#root {
+  width: 100%;
+  height: 100%;
+}
+
+/* Remove any remaining Vite template styles */
+button:hover {
+  border-color: transparent;
+}
+
+button:focus,
+button:focus-visible {
+  outline: none;
+}
+
+/* Disable any light mode overrides */
+@media (prefers-color-scheme: light) {
+  :root {
+    color: rgba(255, 255, 255, 0.87);
+    background-color: #1a1a1a;
+  }
+  button {
+    background-color: #1a1a1a;
+  }
+}

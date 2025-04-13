@@ -1,0 +1,33 @@
+# GrocerySync Tasks
+
+- [x] **Project Setup**
+    - [x] Initialize frontend framework (React with Vite assumed)
+    - [x] Install necessary dependencies (e.g., FaunaDB driver, styling libraries)
+- [x] **FaunaDB Setup**
+    - [x] Define database schema (`Users`, `Items`)
+    - [x] Create FaunaDB client setup
+    - [x] Implement user creation/seeding script for initial users
+    - [x] Implement authentication functions (login, password change)
+    - [x] Implement item CRUD functions (add, delete, respecting roles)
+- [x] **Frontend Development**
+    - [x] **Authentication:**
+        - [x] Create Login component/page
+        - [x] Implement login logic
+        - [x] Implement password change functionality
+    - [x] **Grocery List:**
+        - [x] Create List display component
+        - [x] Create Add Item component/form (with notes)
+        - [x] Implement item fetching
+        - [x] Implement item adding (handling Kid/Parent roles)
+        - [x] Implement item deletion (handling Parent role)
+    - [x] **Styling & Design:**
+        - [x] Implement dark mode theme (charcoal background)
+        - [x] Style the grocery list container (black, rounded corners)
+        - [x] Implement aurora effect border for the list
+        - [x] Implement animated shopping cart background with interaction
+    - [x] **State Management & Routing:**
+        - [x] Set up state management (e.g., Context API)
+        - [x] Set up routing (if needed)
+- [ ] **Deployment (Optional)**
+    - [ ] Configure hosting
+    - [ ] Deploy application 
