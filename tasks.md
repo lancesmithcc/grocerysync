@@ -20,14 +20,40 @@
         - [x] Implement item fetching
         - [x] Implement item adding (handling Kid/Parent roles)
         - [x] Implement item deletion (handling Parent role)
+        - [x] Add item importance rating with star rating UI
+        - [x] Sort items by importance rating
     - [x] **Styling & Design:**
         - [x] Implement dark mode theme (charcoal background)
         - [x] Style the grocery list container (black, rounded corners)
-        - [x] Implement aurora effect border for the list
-        - [x] Implement animated shopping cart background with interaction
+        - [ ] Implement aurora effect border for the list
+        - [ ] Implement animated shopping cart background with interaction
     - [x] **State Management & Routing:**
         - [x] Set up state management (e.g., Context API)
         - [x] Set up routing (if needed)
+- [x] **Component Refactoring**
+    - [x] **GroceryList Component Refactoring**
+        - [x] Extract AddItemForm into its own component
+        - [x] Extract ItemList into its own component
+        - [x] Extract ItemCard into its own component
+        - [x] Create common MessageDisplay component for errors and success messages
+    - [x] **CartAnimation Component Refactoring**
+        - [x] Extract Cart item renderer into its own component
+        - [x] Extract animation logic into a custom hook (useCartAnimation)
+        - [x] Extract mouse interaction logic into a custom hook
+    - [x] **Common UI Components**
+        - [x] Create Button component with variants (primary, secondary, danger)
+        - [x] Create Input component with validation
+        - [x] Create Form component with common styling
+        - [x] Create StarRating component for importance ratings
+- [ ] **Additional Enhancements**
+    - [ ] **UI/UX Improvements**
+        - [ ] Add loading states and animations
+        - [ ] Improve error handling and user feedback
+        - [ ] Implement responsive design for mobile devices
+        - [ ] Add sorting/filtering capabilities for grocery items
+    - [ ] **Performance Optimization**
+        - [ ] Implement memoization for expensive operations
+        - [ ] Optimize rendering with proper React patterns
 - [ ] **Deployment (Optional)**
     - [ ] Configure hosting
     - [ ] Deploy application 

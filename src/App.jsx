@@ -1,33 +1,17 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { AuthProvider } from './contexts/AuthContext';
 import Login from './components/Login';
 import GroceryList from './components/GroceryList';
 import ChangePassword from './components/ChangePassword';
 import CartAnimation from './components/CartAnimation';
+import CartIcon from './components/CartIcon';
 import { useAuth } from './contexts/AuthContext';
 import './App.css'
 
 // Main layout component that checks authentication state
-function AppContent() {
+function AppContent({ isPWA }) {
   const { currentUser, signOut } = useAuth();
   const [showChangePassword, setShowChangePassword] = useState(false);
-  
-  // Shopping cart SVG icon component
-  const CartIcon = () => (
-    <svg 
-      xmlns="http://www.w3.org/2000/svg" 
-      viewBox="0 0 576 512" 
-      style={{
-        width: '1.2em',
-        height: '1.2em',
-        marginRight: '8px',
-        verticalAlign: 'middle',
-        fill: 'currentColor'
-      }}
-    >
-      <path d="M0 24C0 10.7 10.7 0 24 0L69.5 0c22 0 41.5 12.8 50.6 32l411 0c26.3 0 45.5 25 38.6 50.4l-41 152.3c-8.5 31.4-37 53.3-69.5 53.3l-288.5 0 5.4 28.5c2.2 11.3 12.1 19.5 23.6 19.5L488 336c13.3 0 24 10.7 24 24s-10.7 24-24 24l-288.3 0c-34.6 0-64.3-24.6-70.7-58.5L77.4 54.5c-.7-3.8-4-6.5-7.9-6.5L24 48C10.7 48 0 37.3 0 24zM128 464a48 48 0 1 1 96 0 48 48 0 1 1 -96 0zm336-48a48 48 0 1 1 0 96 48 48 0 1 1 0-96z"/>
-    </svg>
-  );
   
   // If not logged in, show login form
   if (!currentUser) {
@@ -46,7 +30,7 @@ function AppContent() {
       <div className="app-container">
         <header>
           <h1>
-            <CartIcon /> GrocerySync
+            <CartIcon size="1.5em" /> GrocerySync
           </h1>
           <div className="user-info">
             <span>Welcome, {currentUser.username} ({currentUser.role})</span>
@@ -66,10 +50,52 @@ function AppContent() {
 }
 
 function App() {
+  const [isPWA, setIsPWA] = useState(false);
+  const [isIOSStandalone, setIsIOSStandalone] = useState(false);
+
+  useEffect(() => {
+    // Check if the app is running as PWA
+    const isInStandaloneMode = () => {
+      return window.matchMedia('(display-mode: standalone)').matches || 
+             (window.navigator.standalone) || 
+             document.referrer.includes('android-app://');
+    };
+    
+    // Detect iOS standalone mode
+    const detectIOSStandalone = () => {
+      return window.navigator.standalone === true;
+    };
+
+    setIsPWA(isInStandaloneMode());
+    setIsIOSStandalone(detectIOSStandalone());
+
+    // Register service worker
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/service-worker.js')
+          .then(registration => {
+            console.log('ServiceWorker registration successful with scope: ', registration.scope);
+          })
+          .catch(error => {
+            console.log('ServiceWorker registration failed: ', error);
+          });
+      });
+    }
+
+    // Add event listener for display mode changes
+    const mediaQuery = window.matchMedia('(display-mode: standalone)');
+    const handleChange = (e) => setIsPWA(e.matches);
+    mediaQuery.addEventListener('change', handleChange);
+    
+    return () => mediaQuery.removeEventListener('change', handleChange);
+  }, []);
+
   return (
-    <AuthProvider>
-      <AppContent />
-    </AuthProvider>
+    <div className={isIOSStandalone ? 'ios-standalone' : ''}>
+      <AuthProvider>
+        <AppContent isPWA={isPWA} />
+      </AuthProvider>
+    </div>
   )
 }
 

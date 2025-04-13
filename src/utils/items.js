@@ -35,16 +35,21 @@ export async function getAllItems() {
  * @param {string} name - The item name
  * @param {string} notes - Optional notes about the item
  * @param {string} addedBy - Username of who added the item
+ * @param {number} importance - Importance rating (1-5)
  * @returns {Promise<{success: boolean, item?: Object, error?: string}>} Result object
  */
-export async function addItem(name, notes, addedBy) {
+export async function addItem(name, notes, addedBy, importance = 1) {
   try {
+    // Ensure importance is a valid number between 1-5
+    const validImportance = Math.max(1, Math.min(5, parseInt(importance) || 1));
+    
     // Any user (parent or kid) can add items
     const query = fql`
       Items.create({
         name: ${name},
         notes: ${notes || ''},
         addedBy: ${addedBy},
+        importance: ${validImportance},
         createdAt: Time.now()
       })
     `;
@@ -85,7 +90,10 @@ export async function deleteItem(itemId, username) {
     // Check user role - only parents can delete
     const userRole = await getUserRole(username);
     
+    console.log('Delete attempt by:', username, 'with role:', userRole);
+    
     if (userRole !== 'parent') {
+      console.log('Delete denied: user is not a parent');
       return {
         success: false,
         error: 'Only parents can delete items'
@@ -115,6 +123,8 @@ export async function deleteItem(itemId, username) {
     };
   } catch (error) {
     console.error('Error deleting item:', error);
+    console.error('Error details:', JSON.stringify(error, null, 2));
+    
     // Check if the error is due to item not found
     if (error.message?.includes('not found') || error.message?.includes('invalid ref')) {
       return {

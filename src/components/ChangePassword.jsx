@@ -1,5 +1,9 @@
 import { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
+import Form from './ui/Form';
+import Input from './ui/Input';
+import Button from './ui/Button';
+import MessageDisplay from './ui/MessageDisplay';
 
 function ChangePassword({ onClose }) {
   const [currentPassword, setCurrentPassword] = useState('');
@@ -9,9 +13,7 @@ function ChangePassword({ onClose }) {
   const [isError, setIsError] = useState(false);
   const { updatePassword, loading } = useAuth();
   
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    
+  const handleSubmit = async () => {
     // Reset messages
     setMessage('');
     setIsError(false);
@@ -61,18 +63,25 @@ function ChangePassword({ onClose }) {
     <div className="modal-backdrop">
       <div className="modal-content">
         <h2>Change Password</h2>
-        <button className="close-button" onClick={onClose}>×</button>
+        <Button 
+          className="close-button"
+          onClick={onClose}
+          variant="secondary"
+        >
+          ×
+        </Button>
         
-        {message && (
-          <div className={`message ${isError ? 'error' : 'success'}`}>
-            {message}
-          </div>
-        )}
+        <MessageDisplay
+          message={message}
+          type={isError ? 'error' : 'success'} 
+          onClear={() => setMessage('')}
+          duration={0} // Don't auto-clear
+        />
         
-        <form onSubmit={handleSubmit}>
-          <div className="form-group">
-            <label htmlFor="currentPassword">Current Password</label>
-            <input
+        <Form onSubmit={handleSubmit}>
+          <Form.Group>
+            <Form.Label htmlFor="currentPassword">Current Password</Form.Label>
+            <Input
               type="password"
               id="currentPassword"
               value={currentPassword}
@@ -80,11 +89,11 @@ function ChangePassword({ onClose }) {
               disabled={loading}
               required
             />
-          </div>
+          </Form.Group>
           
-          <div className="form-group">
-            <label htmlFor="newPassword">New Password</label>
-            <input
+          <Form.Group>
+            <Form.Label htmlFor="newPassword">New Password</Form.Label>
+            <Input
               type="password"
               id="newPassword"
               value={newPassword}
@@ -92,11 +101,11 @@ function ChangePassword({ onClose }) {
               disabled={loading}
               required
             />
-          </div>
+          </Form.Group>
           
-          <div className="form-group">
-            <label htmlFor="confirmPassword">Confirm New Password</label>
-            <input
+          <Form.Group>
+            <Form.Label htmlFor="confirmPassword">Confirm New Password</Form.Label>
+            <Input
               type="password"
               id="confirmPassword"
               value={confirmPassword}
@@ -104,26 +113,28 @@ function ChangePassword({ onClose }) {
               disabled={loading}
               required
             />
-          </div>
+          </Form.Group>
           
           <div className="button-group">
-            <button 
+            <Button 
               type="button" 
               onClick={onClose}
               disabled={loading}
+              variant="secondary"
               className="cancel-button"
             >
               Cancel
-            </button>
-            <button 
+            </Button>
+            <Button 
               type="submit"
               disabled={loading || !currentPassword || !newPassword || !confirmPassword}
+              variant="primary"
               className="submit-button"
             >
               {loading ? 'Updating...' : 'Update Password'}
-            </button>
+            </Button>
           </div>
-        </form>
+        </Form>
       </div>
     </div>
   );

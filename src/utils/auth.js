@@ -28,6 +28,14 @@ export async function login(username, password) {
       return { success: false, error: 'Invalid username or password' };
     }
     
+    // Verify user has a role property
+    if (!user.role) {
+      console.error('User is missing role property:', username);
+      return { success: false, error: 'User account is missing role information' };
+    }
+    
+    console.log('User logged in successfully:', username, 'with role:', user.role);
+    
     // Return user info without sensitive data
     const { passwordHash, ...safeUserData } = user;
     return { 
@@ -90,14 +98,29 @@ export async function changePassword(username, currentPassword, newPassword) {
  */
 export async function getUserRole(username) {
   try {
+    console.log('Getting role for user:', username);
+    
+    if (!username) {
+      console.error('getUserRole called with empty username');
+      return null;
+    }
+    
     const userQuery = fql`
-      Users.where(.username == ${username}).first().role
+      Users.where(.username == ${username}).first()
     `;
     
     const result = await client.query(userQuery);
-    return result.data || null;
+    console.log('User role query result:', result);
+    
+    if (!result.data) {
+      console.error('User not found:', username);
+      return null;
+    }
+    
+    return result.data.role || null;
   } catch (error) {
     console.error('Get user role error:', error);
+    console.error('Error details:', JSON.stringify(error, null, 2));
     return null;
   }
 } 
