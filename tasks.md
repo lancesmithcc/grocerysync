@@ -25,8 +25,8 @@
     - [x] **Styling & Design:**
         - [x] Implement dark mode theme (charcoal background)
         - [x] Style the grocery list container (black, rounded corners)
-        - [ ] Implement aurora effect border for the list
-        - [ ] Implement animated shopping cart background with interaction
+        - [x] Implement aurora effect border for the list
+        - [x] Implement animated shopping cart background with interaction
         - [x] Set up shopping cart favicon and app icons
     - [x] **State Management & Routing:**
         - [x] Set up state management (e.g., Context API)
@@ -47,10 +47,10 @@
         - [x] Create Form component with common styling
         - [x] Create StarRating component for importance ratings
 - [ ] **Additional Enhancements**
-    - [ ] **UI/UX Improvements**
-        - [ ] Add loading states and animations
-        - [ ] Improve error handling and user feedback
-        - [ ] Implement responsive design for mobile devices
+    - [x] **UI/UX Improvements**
+        - [x] Add loading states and animations
+        - [x] Improve error handling and user feedback
+        - [x] Implement responsive design for mobile devices
         - [ ] Add sorting/filtering capabilities for grocery items
     - [ ] **Performance Optimization**
         - [ ] Implement memoization for expensive operations
