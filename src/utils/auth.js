@@ -86,9 +86,11 @@ export async function changePassword(username, currentPassword, newPassword) {
     const saltRounds = 10;
     const newPasswordHash = await bcrypt.hash(newPassword, saltRounds);
     
+    let user;
+    
     try {
       // Get the document reference first
-      const user = await client.query(fql`
+      user = await client.query(fql`
         Users.where(.username == ${username}).first()
       `);
       
@@ -115,7 +117,7 @@ export async function changePassword(username, currentPassword, newPassword) {
         console.log('Trying alternative update approach...');
         
         // Use document ID directly if we have it
-        const documentId = user?.data?.id;
+        const documentId = loginResult.user?.id;
         
         if (documentId) {
           await client.query(fql`
