@@ -136,9 +136,10 @@ input:focus {
   left: 0 !important;
   width: 100vw !important;
   height: 100vh !important;
-  z-index: 0 !important; /* Increase z-index to be above -1 but below content */
-  pointer-events: none !important;
+  z-index: 0 !important; /* Above -1 but below content */
+  pointer-events: none !important; /* Completely disable pointer events on mobile */
   overflow: hidden !important;
+  touch-action: none !important; /* Prevent all touch actions */
 }
 
 /* The original cart icon styles don't apply anymore since we're using React state now */
@@ -181,6 +182,7 @@ input:focus {
   flex-direction: column;
   overflow-y: auto; /* Ensure content is scrollable */
   -webkit-overflow-scrolling: touch; /* Better scrolling on iOS */
+  touch-action: pan-y; /* Allow vertical touch scrolling */
 }
 
 /* --- Header --- */
@@ -422,6 +424,7 @@ h1 {
   gap: 20px;
   overflow-y: auto; /* Ensure content is scrollable */
   -webkit-overflow-scrolling: touch; /* Better scrolling on iOS */
+  touch-action: pan-y; /* Allow vertical scrolling */
 }
 
 .add-item-form, .grocery-items {
@@ -671,6 +674,7 @@ svg {
   height: 100%;
   overflow-y: auto; /* Ensure scrolling works */
   -webkit-overflow-scrolling: touch;
+  touch-action: pan-y; /* Allow vertical scrolling */
 }
 
 /* Fix for iOS notches */

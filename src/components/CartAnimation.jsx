@@ -7,7 +7,7 @@ function CartAnimation() {
   const containerRef = useRef(null);
   const { carts, CART_EMOJI, getEmojiForCart } = useCartAnimation();
   const [cartsState, setCartsState] = useState(carts);
-  const [enableInteraction, setEnableInteraction] = useState(true);
+  const [enableInteraction, setEnableInteraction] = useState(false); // Default to disabled on mobile
   
   // Initialize mouse interaction
   useMouseInteraction(setCartsState);
@@ -19,20 +19,26 @@ function CartAnimation() {
   
   // Handle interaction without disrupting scrolling
   useEffect(() => {
-    const handleTouchStart = () => {
+    // Detect if device is mobile
+    const isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    
+    // On mobile devices, disable interaction by default to prioritize scrolling
+    if (isMobileDevice) {
+      setEnableInteraction(false);
+    } else {
       setEnableInteraction(true);
+    }
+    
+    const handleTouchStart = () => {
+      // On mobile, don't enable interaction on touch to prioritize scrolling
+      if (!isMobileDevice) {
+        setEnableInteraction(true);
+      }
     };
     
     const handleScroll = () => {
-      // For iOS scrolling improvements
-      const scrollY = window.scrollY;
-      if (scrollY > 10) {
-        // If user is scrolling, disable interaction with the cart animation
-        setEnableInteraction(false);
-      } else {
-        // When at the top, re-enable interaction with cart animation
-        setEnableInteraction(true);
-      }
+      // When user is scrolling, always disable animation interaction
+      setEnableInteraction(false);
     };
     
     window.addEventListener('scroll', handleScroll, { passive: true });
@@ -41,7 +47,6 @@ function CartAnimation() {
     return () => {
       window.removeEventListener('scroll', handleScroll);
       window.removeEventListener('touchstart', handleTouchStart);
-      clearTimeout(window.scrollTimeout);
     };
   }, []);
   
@@ -57,7 +62,8 @@ function CartAnimation() {
         height: '100vh',
         zIndex: 0,
         pointerEvents: enableInteraction ? 'auto' : 'none',
-        overflow: 'hidden'
+        overflow: 'hidden',
+        touchAction: 'none' // Prevent this container from handling touch events
       }}
     >
       {carts.map(cart => (

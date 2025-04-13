@@ -68,6 +68,7 @@
     - [x] Fix password change functionality (FQL query validation error)
     - [x] Fix scrolling issues on iOS and mobile devices
     - [x] Fix Add Item form interfering with page scrolling
+    - [x] Fix mobile swipe gesture scrolling functionality
     - [ ] Address any other reported bugs
 - [ ] **Deployment (Optional)**
     - [ ] Configure hosting
