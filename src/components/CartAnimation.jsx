@@ -24,8 +24,15 @@ function CartAnimation() {
     };
     
     const handleScroll = () => {
-      // We no longer disable interaction during scroll
-      // This allows normal scrolling behavior
+      // For iOS scrolling improvements
+      const scrollY = window.scrollY;
+      if (scrollY > 10) {
+        // If user is scrolling, disable interaction with the cart animation
+        setEnableInteraction(false);
+      } else {
+        // When at the top, re-enable interaction with cart animation
+        setEnableInteraction(true);
+      }
     };
     
     window.addEventListener('scroll', handleScroll, { passive: true });

@@ -65,6 +65,7 @@
         - [ ] Optimize rendering with proper React patterns
 - [x] **Bug Fixes**
     - [x] Fix password change functionality (FQL query validation error)
+    - [x] Fix scrolling issues on iOS and mobile devices
     - [ ] Address any other reported bugs
 - [ ] **Deployment (Optional)**
     - [ ] Configure hosting

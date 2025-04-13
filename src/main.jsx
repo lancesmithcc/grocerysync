@@ -20,13 +20,8 @@ if (lastVersion && lastVersion !== VERSION_STRING) {
 // Disable default touch behaviors on mobile
 document.addEventListener('touchstart', function() {}, { passive: true });
 
-// Allow normal scrolling behavior on all elements
-// Remove the iOS bounce prevention that was preventing scrolling
-// document.body.addEventListener('touchmove', function(e) {
-//   if (e.target.closest('.scroll-container') === null) {
-//     e.preventDefault();
-//   }
-// }, { passive: false });
+// Ensure scrolling works properly on iOS by making touchmove events passive
+document.addEventListener('touchmove', function() {}, { passive: true });
 
 // Add iOS standalone web app handling
 if (window.navigator.standalone) {

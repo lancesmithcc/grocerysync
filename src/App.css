@@ -71,7 +71,6 @@
   padding: 0;
   box-sizing: border-box;
   -webkit-tap-highlight-color: transparent;
-  touch-action: manipulation;
 }
 
 body, html {
@@ -81,6 +80,7 @@ body, html {
   height: 100%;
   width: 100%;
   overflow-x: hidden;
+  -webkit-overflow-scrolling: touch; /* Improve scrolling on iOS */
 }
 
 body {
@@ -418,8 +418,9 @@ h1 {
   flex-direction: column;
   gap: 32px;
   flex: 1;
-  overflow-y: visible;
-  max-height: none;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch; /* Improve scrolling on iOS */
+  padding-bottom: 20px;
 }
 
 .add-item-form, .grocery-items {
@@ -496,8 +497,10 @@ h1 {
 
 .item-list {
   list-style: none;
-  overflow-y: visible;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch; /* Improve scrolling on iOS */
   max-height: none;
+  padding-bottom: 10px;
 }
 
 .item {
@@ -638,10 +641,11 @@ svg {
 /* Add iOS PWA styling */
 .ios-standalone {
   /* iOS specific styles when app is launched from homescreen */
-  position: absolute; /* Changed from fixed to allow scrolling */
+  position: relative; /* Changed from absolute to allow scrolling */
   width: 100%;
   height: 100%;
-  overflow: auto; /* Changed from hidden to auto */
+  overflow: auto; /* Ensure scrolling works */
+  -webkit-overflow-scrolling: touch;
 }
 
 /* Fix for iOS notches */
