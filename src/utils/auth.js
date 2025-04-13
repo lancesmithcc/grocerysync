@@ -86,7 +86,6 @@ export async function changePassword(username, currentPassword, newPassword) {
     const saltRounds = 10;
     const newPasswordHash = await bcrypt.hash(newPassword, saltRounds);
     
-    // Use raw query execution to update the password
     try {
       // Get the document reference first
       const user = await client.query(fql`
@@ -99,28 +98,38 @@ export async function changePassword(username, currentPassword, newPassword) {
       
       console.log('User found, updating password...');
       
-      // Fix: Use parameter object instead of string interpolation for the password hash
-      await client.query(
-        fql`Users.byId(${user.data.id}).update({ passwordHash: ${newPasswordHash} })`
-      );
+      // Using the correct FQL syntax for updating with parameters
+      await client.query(fql`
+        let user = Users.where(.username == ${username}).first()
+        user.update({
+          passwordHash: ${newPasswordHash}
+        })
+      `);
       
       return { success: true };
     } catch (dbError) {
-      console.error('Password change error: QueryCheckError:', dbError);
+      console.error('Password change error:', dbError);
       
-      // Try an alternative approach using a different query structure
+      // Try a completely different approach as fallback
       try {
         console.log('Trying alternative update approach...');
         
-        // Use a more direct approach with explicit document reference
-        await client.query(
-          fql`
-            let user = Users.where(.username == ${username}).first()
-            user.update({ passwordHash: ${newPasswordHash} })
-          `
-        );
+        // Use document ID directly if we have it
+        const documentId = user?.data?.id;
         
-        return { success: true };
+        if (documentId) {
+          await client.query(fql`
+            Users.byId(${documentId}).update({
+              passwordHash: ${newPasswordHash}
+            })
+          `);
+          return { success: true };
+        } else {
+          return { 
+            success: false, 
+            error: 'Could not find user ID for update'
+          };
+        }
       } catch (fallbackError) {
         console.error('Fallback approach failed:', fallbackError);
         return { 
