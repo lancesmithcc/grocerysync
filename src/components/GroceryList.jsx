@@ -110,7 +110,7 @@ function GroceryList() {
         onClear={() => setSuccess('')}
       />
       
-      {/* Add item form */}
+      {/* Add item form - positioned as the first element for better accessibility */}
       <AddItemForm onItemAdded={loadItems} />
       
       {/* Item list */}

@@ -48,6 +48,7 @@
         - [x] Add loading states and animations
         - [x] Improve error handling and user feedback
         - [x] Implement responsive design for mobile devices
+        - [x] Update background animations to only include shopping carts and food items
         - [ ] Add sorting/filtering capabilities for grocery items
     - [x] **Version Management & Cache Busting**
         - [x] Implement Vite build configuration for asset hashing
@@ -66,6 +67,7 @@
 - [x] **Bug Fixes**
     - [x] Fix password change functionality (FQL query validation error)
     - [x] Fix scrolling issues on iOS and mobile devices
+    - [x] Fix Add Item form interfering with page scrolling
     - [ ] Address any other reported bugs
 - [ ] **Deployment (Optional)**
     - [ ] Configure hosting

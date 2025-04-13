@@ -432,6 +432,7 @@ h1 {
   position: relative; /* For aurora effect */
   z-index: 1;
   opacity: 0.8;
+  overflow: visible; /* Changed from possible auto to ensure no scroll trap */
 }
 
 /* Aurora effect border for lists */
@@ -470,6 +471,8 @@ h1 {
 .form-row {
   display: flex;
   gap: 16px;
+  position: relative;
+  width: 100%;
 }
 
 .form-row input {
@@ -498,10 +501,9 @@ h1 {
 
 .item-list {
   list-style: none;
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch; /* Improve scrolling on iOS */
-  max-height: none;
   padding-bottom: 10px;
+  position: relative;
+  overflow: visible; /* Allow content to flow normally */
 }
 
 .item {
@@ -621,13 +623,25 @@ h1 {
   
   .add-item-form, .grocery-items {
     padding: 15px;
-    overflow-y: auto;
+    overflow: visible; /* Ensure form doesn't trap scrolling */
+    position: relative;
+    width: 100%;
   }
   
   .grocery-list-container {
     height: auto;
     overflow-y: auto;
-    padding-bottom: 60px; /* Add more space at the bottom on mobile */
+    padding-bottom: 70px; /* Increased space at the bottom on mobile */
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  .form {
+    width: 100%;
+    position: relative;
+  }
+  
+  .form-row {
+    width: 100%;
   }
 }
 
@@ -780,7 +794,7 @@ h1 svg {
   position: relative; /* For aurora effect */
   z-index: 1;
   opacity: 0.8;
-  overflow-y: visible;
+  overflow: visible; /* Changed from possible auto to ensure no scroll trap */
   max-height: none;
   display: flex;
   flex-direction: column;

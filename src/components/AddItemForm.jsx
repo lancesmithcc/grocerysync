@@ -27,33 +27,38 @@ function AddItemForm({ onItemAdded }) {
     setError('');
     setSuccess('');
     
-    const result = await addItem(
-      newItemName.trim(), 
-      newItemNotes.trim(),
-      currentUser.username,
-      importance // Add importance rating to the item
-    );
-    
-    if (result.success) {
-      // Clear form fields
-      setNewItemName('');
-      setNewItemNotes('');
-      setImportance(1); // Reset to default
+    try {
+      const result = await addItem(
+        newItemName.trim(), 
+        newItemNotes.trim(),
+        currentUser.username,
+        importance // Add importance rating to the item
+      );
       
-      // Show success message
-      setSuccess('Item added successfully');
-      
-      // Notify parent component
-      if (onItemAdded) {
-        onItemAdded();
+      if (result.success) {
+        // Clear form fields
+        setNewItemName('');
+        setNewItemNotes('');
+        setImportance(1); // Reset to default
+        
+        // Show success message
+        setSuccess('Item added successfully');
+        
+        // Notify parent component
+        if (onItemAdded) {
+          onItemAdded();
+        }
+        
+        // Clear success message handled by MessageDisplay
+      } else {
+        setError(result.error || 'Failed to add item');
       }
-      
-      // Clear success message handled by MessageDisplay
-    } else {
-      setError(result.error || 'Failed to add item');
+    } catch (err) {
+      console.error('Error adding item:', err);
+      setError('An unexpected error occurred while adding the item');
+    } finally {
+      setLoading(false);
     }
-    
-    setLoading(false);
   };
   
   return (
@@ -72,7 +77,7 @@ function AddItemForm({ onItemAdded }) {
         onClear={() => setSuccess('')}
       />
       
-      <Form onSubmit={handleAddItem} className="add-item-form">
+      <Form onSubmit={handleAddItem}>
         <Form.Row>
           <Input
             type="text"
@@ -81,6 +86,7 @@ function AddItemForm({ onItemAdded }) {
             onChange={(e) => setNewItemName(e.target.value)}
             disabled={loading}
             required
+            aria-label="Item name"
           />
           
           <Input
@@ -89,17 +95,19 @@ function AddItemForm({ onItemAdded }) {
             value={newItemNotes}
             onChange={(e) => setNewItemNotes(e.target.value)}
             disabled={loading}
+            aria-label="Item notes"
           />
         </Form.Row>
         
         <Form.Row className="importance-row">
           <div className="importance-selector">
-            <label>Importance:</label>
+            <label htmlFor="importance-rating">Importance:</label>
             <StarRating 
               rating={importance} 
               setRating={setImportance} 
               maxStars={5}
               editable={!loading}
+              id="importance-rating"
             />
           </div>
           
@@ -107,6 +115,7 @@ function AddItemForm({ onItemAdded }) {
             type="submit"
             disabled={loading || !newItemName.trim()}
             className="add-button"
+            aria-label="Add item to grocery list"
           >
             Add Item
           </Button>

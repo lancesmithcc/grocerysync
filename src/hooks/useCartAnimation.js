@@ -1,7 +1,18 @@
 import { useState, useEffect } from 'react';
 
 const CART_COUNT = 20;
-const CART_EMOJIS = ['🛒', '🏪', '🛍️', '🧺', '📦'];
+// Update emojis to include only shopping carts and food items
+const CART_EMOJIS = [
+  // Shopping carts
+  '🛒',
+  // Food items
+  '🍎', '🍐', '🍊', '🍋', '🍌', '🍉', '🍇', '🍓', '🍈', '🍒', '🍑', '🥭', 
+  '🍍', '🥥', '🥝', '🍅', '🥑', '🥦', '🥬', '🥒', '🌽', '🥕', '🧄', '🧅',
+  '🥔', '🍞', '🥐', '🥖', '🥨', '🧀', '🥚', '🍳', '🥩', '🍗', '🍖', '🌭',
+  '🍔', '🍟', '🍕', '🥪', '🥙', '🧆', '🌮', '🌯', '🥗', '🥘', '🥫', '🍝',
+  '🍜', '🍲', '🍛', '🍤', '🍙', '🍚', '🍘', '🍥', '🥠', '🥮', '🍢', '🍧',
+  '🍨', '🍦', '🥧', '🧁', '🍰', '🍮', '🍭', '🍬', '🍫', '🍿', '🍩', '🍪'
+];
 
 function useCartAnimation() {
   const [carts, setCarts] = useState([]);
@@ -40,6 +51,11 @@ function useCartAnimation() {
         });
       }
     });
+    
+    // Ensure at least one shopping cart emoji is present
+    if (initialCarts.length > 0) {
+      initialCarts[0].emojiIndex = 0; // Set first element to shopping cart emoji
+    }
     
     setCarts(initialCarts);
     console.log('Created initial carts:', initialCarts.length);

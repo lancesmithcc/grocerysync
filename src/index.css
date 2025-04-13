@@ -14,28 +14,32 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Reset the body to work better with our fixed animations */
-body {
+/* Reset the body to work better with fixed animations and scrolling */
+html, body {
   margin: 0;
   padding: 0;
   width: 100%;
-  min-height: 100vh;
+  height: 100%;
+  min-height: 100%;
   overflow-x: hidden;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch; /* Better scrolling on iOS */
+  position: relative;
+  touch-action: manipulation; /* Improve touch behavior */
 }
 
-/* Remove the centered flex layout that conflicts with our design */
+/* Ensure proper display layout */
 body {
-  display: block;
-  min-width: unset;
-  min-height: unset;
+  display: block; /* Override any flex display */
+  overscroll-behavior-y: none; /* Prevent pull-to-refresh */
 }
 
 #root {
   width: 100%;
   min-height: 100vh;
   position: relative;
+  display: flex;
+  flex-direction: column;
 }
 
 /* Remove any remaining Vite template styles */
