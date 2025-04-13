@@ -72,8 +72,12 @@ export async function changePassword(username, currentPassword, newPassword) {
     const newPasswordHash = await bcrypt.hash(newPassword, saltRounds);
     
     // Update the user's password hash
+    // Fixed query syntax for FQL v10
     const updateQuery = fql`
-      let user = Users.where(.username == ${username}).first();
+      let user = Users.where(.username == ${username}).first()
+      if (user == null) {
+        abort("User not found")
+      }
       user.update({
         passwordHash: ${newPasswordHash}
       })
@@ -81,12 +85,13 @@ export async function changePassword(username, currentPassword, newPassword) {
     
     await client.query(updateQuery);
     
+    console.log('Password updated successfully for user:', username);
     return { success: true };
   } catch (error) {
     console.error('Password change error:', error);
     return { 
       success: false, 
-      error: 'An error occurred while changing password'
+      error: 'An error occurred while changing password: ' + (error.message || 'Unknown error')
     };
   }
 }

@@ -37,24 +37,33 @@ function ChangePassword({ onClose }) {
       return;
     }
     
-    // Submit password change
-    const result = await updatePassword(currentPassword, newPassword);
-    
-    if (result.success) {
-      setMessage('Password successfully updated');
-      setIsError(false);
+    try {
+      // Submit password change
+      console.log('Attempting to update password...');
+      const result = await updatePassword(currentPassword, newPassword);
       
-      // Clear form
-      setCurrentPassword('');
-      setNewPassword('');
-      setConfirmPassword('');
-      
-      // Close modal after delay
-      setTimeout(() => {
-        onClose();
-      }, 2000);
-    } else {
-      setMessage(result.error || 'Failed to update password');
+      if (result.success) {
+        console.log('Password update successful');
+        setMessage('Password successfully updated');
+        setIsError(false);
+        
+        // Clear form
+        setCurrentPassword('');
+        setNewPassword('');
+        setConfirmPassword('');
+        
+        // Close modal after delay
+        setTimeout(() => {
+          onClose();
+        }, 2000);
+      } else {
+        console.error('Password update failed:', result.error);
+        setMessage(result.error || 'Failed to update password');
+        setIsError(true);
+      }
+    } catch (error) {
+      console.error('Exception during password update:', error);
+      setMessage(`An unexpected error occurred: ${error.message || 'Unknown error'}`);
       setIsError(true);
     }
   };
@@ -100,6 +109,7 @@ function ChangePassword({ onClose }) {
               onChange={(e) => setNewPassword(e.target.value)}
               disabled={loading}
               required
+              minLength={6}
             />
           </Form.Group>
           
