@@ -67,7 +67,7 @@ export async function login(username, password) {
 }
 
 /**
- * Changes a user's password using a completely different approach
+ * Changes a user's password - simplified implementation
  * @param {string} username - The user's username
  * @param {string} currentPassword - The user's current password
  * @param {string} newPassword - The user's new password
@@ -75,7 +75,7 @@ export async function login(username, password) {
  */
 export async function changePassword(username, currentPassword, newPassword) {
   try {
-    // First verify current password is correct
+    // First verify current password is correct using login function
     const loginResult = await login(username, currentPassword);
     
     if (!loginResult.success) {
@@ -86,62 +86,54 @@ export async function changePassword(username, currentPassword, newPassword) {
     const saltRounds = 10;
     const newPasswordHash = await bcrypt.hash(newPassword, saltRounds);
     
-    // Fetch the user to see the document structure
-    console.log('Finding user for password update:', username);
-    const findUserQuery = fql`
-      Users.where(.username == ${username}).first()
-    `;
-    
-    const userResult = await client.query(findUserQuery);
-    console.log('User find result:', userResult);
-    
-    if (!userResult.data) {
-      console.error('User not found during password update');
-      return { success: false, error: 'User not found' };
-    }
-    
-    // Get the document ID and check field names
-    const user = userResult.data;
-    const userId = user.id;
-    console.log('User ID found:', userId);
-    console.log('User fields:', Object.keys(user));
-    
-    // Determine the correct password field name
-    const passwordFieldName = 
-      Object.keys(user).includes('passwordHash') ? 'passwordHash' :
-      Object.keys(user).includes('password') ? 'password' : 
-      'hashedPassword'; // fallback field name
-    
-    console.log('Using password field name:', passwordFieldName);
-    
-    // Now construct a direct document update with the correct field name
-    const updateObj = {};
-    updateObj[passwordFieldName] = newPasswordHash;
-    
-    const updatePasswordQuery = fql`
-      Users.byId(${userId})
-        .update(${updateObj})
-    `;
-    
-    console.log('Attempting to update password...');
+    // Use raw query execution to update the password
     try {
-      const updateResult = await client.query(updatePasswordQuery);
-      console.log('Password update result:', updateResult);
+      // Get the document reference first
+      const user = await client.query(fql`
+        Users.where(.username == ${username}).first()
+      `);
+      
+      if (!user.data) {
+        return { success: false, error: 'User not found' };
+      }
+      
+      console.log('User found, updating password...');
+      
+      // Use a simple update statement
+      await client.query(fql`
+        Users.byId(${user.data.id}).update({
+          passwordHash: ${newPasswordHash}
+        })
+      `);
       
       return { success: true };
-    } catch (updateError) {
-      console.error('Failed to update password in FaunaDB:', updateError);
-      console.error('Error details:', JSON.stringify(updateError, null, 2));
-      return { 
-        success: false, 
-        error: `Database error: ${updateError.message || 'Unknown error'}`
-      };
+    } catch (dbError) {
+      console.error('Database error:', dbError);
+      // Try one more approach as a fallback
+      try {
+        console.log('Trying alternative update approach...');
+        // Direct query without variable references
+        const updateQuery = `
+          Users.where(.username == "${username}").first().update({
+            passwordHash: "${newPasswordHash}"
+          })
+        `;
+        
+        await client.query({ query: updateQuery });
+        return { success: true };
+      } catch (fallbackError) {
+        console.error('Fallback approach failed:', fallbackError);
+        return { 
+          success: false, 
+          error: 'Could not update password in database. Please contact support.'
+        };
+      }
     }
   } catch (error) {
     console.error('Password change error:', error);
     return { 
       success: false, 
-      error: 'An error occurred while changing password: ' + (error.message || 'Unknown error')
+      error: 'An error occurred while changing password'
     };
   }
 }
