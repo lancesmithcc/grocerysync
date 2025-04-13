@@ -86,57 +86,57 @@ export async function changePassword(username, currentPassword, newPassword) {
     const saltRounds = 10;
     const newPasswordHash = await bcrypt.hash(newPassword, saltRounds);
     
-    let user;
-    
     try {
-      // Get the document reference first
-      user = await client.query(fql`
-        Users.where(.username == ${username}).first()
-      `);
+      console.log('Updating password for user:', username);
       
-      if (!user.data) {
-        return { success: false, error: 'User not found' };
+      // Get the document ID from the login result
+      const documentId = loginResult.user.id;
+      
+      if (!documentId) {
+        console.error('User ID not found in login result');
+        return { success: false, error: 'User ID not found' };
       }
       
-      console.log('User found, updating password...');
+      console.log('Using document ID for update:', documentId);
       
-      // Using the correct FQL syntax for updating with parameters
-      await client.query(fql`
-        let user = Users.where(.username == ${username}).first()
-        user.update({
+      // Update the user's password using the document reference
+      const updateResult = await client.query(fql`
+        Users.byId(${documentId}).update({
           passwordHash: ${newPasswordHash}
         })
       `);
       
+      console.log('Password update successful:', updateResult);
       return { success: true };
-    } catch (dbError) {
-      console.error('Password change error:', dbError);
+    } catch (updateError) {
+      console.error('Password update error:', updateError);
       
-      // Try a completely different approach as fallback
+      // Try an alternative approach with direct where query
       try {
-        console.log('Trying alternative update approach...');
+        console.log('Trying alternative update approach with where clause...');
         
-        // Use document ID directly if we have it
-        const documentId = loginResult.user?.id;
+        const alternativeUpdateResult = await client.query(fql`
+          let user = Users.where(.username == ${username}).first()
+          user!.update({
+            passwordHash: ${newPasswordHash}
+          })
+        `);
         
-        if (documentId) {
-          await client.query(fql`
-            Users.byId(${documentId}).update({
-              passwordHash: ${newPasswordHash}
-            })
-          `);
-          return { success: true };
-        } else {
+        console.log('Alternative password update successful:', alternativeUpdateResult);
+        return { success: true };
+      } catch (alternativeError) {
+        console.error('Alternative update approach failed:', alternativeError);
+        
+        if (alternativeError.message?.includes('null')) {
           return { 
             success: false, 
-            error: 'Could not find user ID for update'
+            error: 'User not found in database' 
           };
         }
-      } catch (fallbackError) {
-        console.error('Fallback approach failed:', fallbackError);
+        
         return { 
           success: false, 
-          error: 'Could not update password in database. Please contact support.'
+          error: 'Could not update password in database: ' + (alternativeError.message || 'Unknown error')
         };
       }
     }
@@ -144,7 +144,7 @@ export async function changePassword(username, currentPassword, newPassword) {
     console.error('Password change error:', error);
     return { 
       success: false, 
-      error: 'An error occurred while changing password'
+      error: 'An error occurred while changing password: ' + (error.message || 'Unknown error')
     };
   }
 }
